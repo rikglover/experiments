@@ -6,98 +6,111 @@ import java.util.Iterator;
 
 public class BinaryTree<T extends Comparable> implements Iterable<T> {
 
-	private BinaryNode<T> root = null;
+	private BinaryNode<T> root;
 
 	public void add(T value) {
 
 		BinaryNode<T> newNode = new BinaryNode<>(value);
+		BinaryNode<T> p = root;
+		BinaryNode<T> q = null;
 
-		if(root == null) {
-            root = newNode;
-		} else {
-			add(root, newNode);
-		}
-	}
+		while (p != null) {
 
-	private void attachParent(BinaryNode<T> destination, BinaryNode<T> node) {
-
-		if(destination == root) {
-			root = node;
-		} else if(destination.getParent().getLeft() == destination) {
-			destination.getParent().setLeft(node);
-		} else {
-			destination.getParent().setRight(node);
+			if (value.compareTo(p.getValue()) <= 0) {
+				q = p;
+				p = p.getLeftChild();
+			} else if (value.compareTo(p.getValue()) > 0) {
+				q = p;
+				p = p.getRightChild();
+			}
 		}
 
-		if(node != null) {
-			node.setParent(destination.getParent());
+		if (root == null) {
+			root = newNode;
+		} else if (value.compareTo(q.getValue()) <= 0) {
+			q.setLeftChild(newNode);
+			newNode.setParent(q);
+		} else {
+			q.setRightChild(newNode);
+			newNode.setParent(q);
 		}
 	}
 
 	public boolean remove(T value) {
 
-		BinaryNode<T> nodeToRemove = find(root, value);
+		BinaryNode<T> nodeToDelete = findNode(value);
 
-		if(nodeToRemove == null) {
+		if (nodeToDelete == null) {
 			return false;
-		} else if(nodeToRemove.getLeft() == null) {
-			attachParent(nodeToRemove, nodeToRemove.getRight());
-		} else if(nodeToRemove.getRight() == null) {
-			attachParent(nodeToRemove, nodeToRemove.getLeft());
-		} else {
-			BinaryNode<T> successor = getMinimum(nodeToRemove.getRight());
-
-			if(successor.getParent() != nodeToRemove) {
-				attachParent(successor, successor.getRight());
-				successor.setRight(nodeToRemove.getRight());
-				successor.getRight().setParent(successor);
+		} else if (nodeToDelete.getLeftChild() == null && nodeToDelete.getRightChild() == null) {
+			if (nodeToDelete.getParent() == null) {
+				root = null;
+			} else if (nodeToDelete.getParent().getLeftChild() == nodeToDelete) {
+				nodeToDelete.getParent().setLeftChild(null);
+			} else {
+				nodeToDelete.getParent().setRightChild(null);
 			}
+		} else if (nodeToDelete.getLeftChild() == null || nodeToDelete.getRightChild() == null) {
+			BinaryNode<T> child = nodeToDelete.getLeftChild() != null ? nodeToDelete.getLeftChild() : nodeToDelete.getRightChild();
 
-			attachParent(nodeToRemove, successor);
-			successor.setLeft(nodeToRemove.getLeft());
-			successor.getLeft().setParent(successor);
+			if (nodeToDelete.getParent() == null) {
+				root = child;
+				child.setParent(null);
+			} else if (nodeToDelete.getParent().getLeftChild() == nodeToDelete) {
+				nodeToDelete.getParent().setLeftChild(child);
+				child.setParent(nodeToDelete.getParent());
+			} else {
+				nodeToDelete.getParent().setRightChild(child);
+				child.setParent(nodeToDelete.getParent());
+			}
+		} else {
+			BinaryNode<T> successor = findSuccessor(nodeToDelete);
+
+			if(successor.getParent().getRightChild() == successor) {
+				successor.setLeftChild(nodeToDelete.getLeftChild());
+
+				if(nodeToDelete.getParent() == null) {
+                    root = successor;
+					successor.setParent(null);
+				} else if(nodeToDelete.getParent().getRightChild() == nodeToDelete) {
+					nodeToDelete.getParent().setRightChild(successor);
+					successor.setParent(nodeToDelete.getParent());
+				} else {
+					nodeToDelete.getParent().setLeftChild(successor);
+					successor.setParent(nodeToDelete.getParent());
+				}
+
+				successor.setLeftChild(nodeToDelete.getLeftChild());
+				successor.getLeftChild().setParent(successor);
+			} else {
+
+				if(successor.getRightChild() != null){
+					successor.getRightChild().setParent(successor.getParent());
+				}
+
+				successor.getParent().setLeftChild(successor.getRightChild());
+
+				if(nodeToDelete.getParent() == null) {
+					root = successor;
+					successor.setParent(null);
+				} else if(nodeToDelete.getParent().getRightChild() == nodeToDelete) {
+					nodeToDelete.getParent().setRightChild(successor);
+					successor.setParent(nodeToDelete.getParent());
+				} else {
+					nodeToDelete.getParent().setLeftChild(successor);
+					successor.setParent(nodeToDelete.getParent());
+				}
+
+				successor.setLeftChild(nodeToDelete.getLeftChild());
+				successor.getLeftChild().setParent(successor);
+
+				successor.setRightChild(nodeToDelete.getRightChild());
+				successor.getRightChild().setParent(successor);
+
+			}
 		}
 
 		return true;
-	}
-
-	public T findSuccessor(T value) {
-
-		BinaryNode<T> node = find(root, value);
-
-		T successorValue = null;
-
-		if(node != null) {
-			BinaryNode<T> successor = getSuccessor(node);
-
-			if(successor != null) {
-				successorValue = successor.getValue();
-			}
-		}
-
-		return successorValue;
-	}
-
-	public T findPredecessor(T value) {
-
-		BinaryNode<T> node = find(root, value);
-
-		T predecessorValue = null;
-
-		if(node != null) {
-			BinaryNode<T> predecessor = getPredecessor(node);
-
-			if(predecessor != null) {
-				predecessorValue = predecessor.getValue();
-			}
-		}
-
-		return predecessorValue;
-	}
-
-	public boolean contains(T value) {
-
-		return find(root, value) != null;
 	}
 
 	public boolean isEmpty() {
@@ -110,117 +123,191 @@ public class BinaryTree<T extends Comparable> implements Iterable<T> {
 		root = null;
 	}
 
-	public T getMinimum() {
+	public boolean contains(T value) {
 
-		BinaryNode<T> node = getMinimum(root);
+		return findNode(value) != null;
+	}
 
-		if(node != null) {
-			return node.getValue();
-		} else {
-            return null;
+	private BinaryNode<T> findNode(T value) {
+
+		BinaryNode<T> p = root;
+
+		while (p != null && value.compareTo(p.getValue()) != 0) {
+			if (value.compareTo(p.getValue()) <= 0) {
+				p = p.getLeftChild();
+			} else if (value.compareTo(p.getValue()) > 0) {
+				p = p.getRightChild();
+			}
+		}
+
+		return p;
+	}
+
+	public void inorder() {
+
+		inorder(root);
+	}
+
+	private void inorder(BinaryNode<T> rootOfSubtree) {
+
+		if (rootOfSubtree != null) {
+			if (rootOfSubtree.getLeftChild() != null) {
+				inorder(rootOfSubtree.getLeftChild());
+			}
+
+			System.out.print(rootOfSubtree.getValue() + " ");
+
+			if (rootOfSubtree.getRightChild() != null) {
+				inorder(rootOfSubtree.getRightChild());
+			}
 		}
 	}
 
-	public T getMaximum() {
+	public void depthFirstTraversal() {
 
-		BinaryNode<T> node = getMaximum(root);
+		Deque<BinaryNode<T>> stack = new ArrayDeque<>();
 
-		if(node != null) {
-			return node.getValue();
-		} else {
+		if (isEmpty()) {
+			return;
+		}
+
+		stack.push(root);
+
+		while (!stack.isEmpty()) {
+			BinaryNode<T> nextNode = stack.pop();
+
+			System.out.println(nextNode.getValue());
+
+			if (nextNode.getLeftChild() != null) {
+				stack.push(nextNode.getLeftChild());
+			}
+
+			if (nextNode.getRightChild() != null) {
+				stack.push(nextNode.getRightChild());
+			}
+		}
+	}
+
+	public void breadthFirstTraversal() {
+
+		java.util.Queue<BinaryNode<T>> queue = new ArrayDeque<>();
+
+		if (isEmpty()) {
+			return;
+		}
+
+		queue.add(root);
+
+		while (!queue.isEmpty()) {
+			BinaryNode<T> nextNode = queue.remove();
+
+			System.out.println(nextNode.getValue());
+
+			if (nextNode.getLeftChild() != null) {
+				queue.add(nextNode);
+			}
+
+			if (nextNode.getRightChild() != null) {
+				queue.remove(nextNode);
+			}
+		}
+	}
+
+	public T findMinimum() {
+
+		if (root == null) {
 			return null;
-		}
-	}
-
-	public int getHeight() {
-        return 0;
-	}
-
-	private void add(BinaryNode<T> rootOfSubTree, BinaryNode<T> newNode) {
-
-		if(newNode.getValue().compareTo(rootOfSubTree.getValue()) < 0) {
-			if(rootOfSubTree.getLeft() == null) {
-				newNode.setParent(rootOfSubTree);
-				rootOfSubTree.setLeft(newNode);
-			} else {
-				add(rootOfSubTree.getLeft(), newNode);
-			}
 		} else {
-			if(rootOfSubTree.getRight() == null) {
-				newNode.setParent(rootOfSubTree);
-				rootOfSubTree.setRight(newNode);
-			} else {
-				add(rootOfSubTree.getRight(), newNode);
-			}
+			return findMinimum(root).getValue();
 		}
 	}
 
-	private BinaryNode<T> find(BinaryNode<T> rootOfSubTree, T value) {
+	private BinaryNode<T> findMinimum(BinaryNode<T> rootOfSubtree) {
 
-		if(rootOfSubTree == null || rootOfSubTree.getValue().equals(value)) {
-			return rootOfSubTree;
-		} else if(value.compareTo(rootOfSubTree.getValue()) < 0) {
-            return find(rootOfSubTree.getLeft(), value);
+		BinaryNode<T> p = rootOfSubtree;
+
+		while (p.getLeftChild() != null) {
+			p = p.getLeftChild();
+		}
+
+		return p;
+	}
+
+	public T findMaximum() {
+
+		if (root == null) {
+			return null;
 		} else {
-            return find(rootOfSubTree.getRight(), value);
+			return findMaximum(root).getValue();
 		}
-
 	}
 
-	private BinaryNode<T> getMaximum(BinaryNode<T> rootOfSubTree) {
+	private BinaryNode<T> findMaximum(BinaryNode<T> rootOfSubtree) {
 
-		BinaryNode<T> cursor = rootOfSubTree;
+		BinaryNode<T> p = rootOfSubtree;
 
-		while(cursor.getRight() != null) {
-			cursor = cursor.getRight();
+		while (p.getRightChild() != null) {
+			p = p.getRightChild();
 		}
 
-		return cursor;
+		return p;
 	}
 
-	private BinaryNode<T> getMinimum(BinaryNode<T> rootOfSubTree) {
+	public T findSuccessor(T value) {
 
-		BinaryNode<T> cursor = rootOfSubTree;
+		BinaryNode<T> node = findNode(value);
+		BinaryNode<T> successor = findSuccessor(node);
 
-		while(cursor.getLeft() != null) {
-			cursor = cursor.getLeft();
+		if (successor == null) {
+			return null;
+		} else {
+			return successor.getValue();
 		}
-
-		return cursor;
 	}
 
-	private BinaryNode<T> getPredecessor(BinaryNode<T> node) {
+	private BinaryNode<T> findSuccessor(BinaryNode<T> node) {
 
-		if(node.getLeft() == null) {
-			BinaryNode<T> child = node;
-			BinaryNode<T> parent = child.getParent();
+		if (node.getRightChild() != null) {
+			return findMinimum(node.getRightChild());
+		} else {
+			BinaryNode<T> p = node.getParent();
+			BinaryNode<T> q = node;
 
-			while((parent != null) && (parent.getRight() != child)) {
-				child = parent;
-				parent = parent.getParent();
+			while (p != null && p.getLeftChild() != q) {
+				q = p;
+				p = p.getParent();
 			}
 
-			return parent;
-		} else {
-			return getMaximum(node.getLeft());
+			return p;
 		}
 	}
 
-	private BinaryNode<T> getSuccessor(BinaryNode<T> node) {
+	public T findPredecessor(T value) {
 
-		if(node.getRight() != null) {
-			return getMinimum(node.getRight());
+		BinaryNode<T> node = findNode(value);
+		BinaryNode<T> predecessor = findPredecessor(node);
+
+		if (predecessor == null) {
+			return null;
 		} else {
-			BinaryNode<T> child = node;
-			BinaryNode<T> parent = child.getParent();
+			return predecessor.getValue();
+		}
+	}
 
-			while((parent != null) && (parent.getLeft() != child)) {
-                child = parent;
-				parent = parent.getParent();
+	private BinaryNode<T> findPredecessor(BinaryNode<T> node) {
+
+		if (node.getLeftChild() != null) {
+			return findMaximum(node.getLeftChild());
+		} else {
+			BinaryNode<T> p = node.getParent();
+			BinaryNode<T> q = node;
+
+			while (p != null && p.getRightChild() != q) {
+				q = p;
+				p = p.getParent();
 			}
 
-			return parent;
-
+			return p;
 		}
 	}
 
@@ -228,84 +315,32 @@ public class BinaryTree<T extends Comparable> implements Iterable<T> {
 
 		return new Iterator<T>() {
 
-			BinaryNode<T> nextNode = descending ? getMaximum(root) : getMinimum(root);
+			BinaryNode<T> nextNode = descending ? findMaximum(root) : findMinimum(root);
 
-			@Override
-			public boolean hasNext() {
-
-				return nextNode != null;
-			}
-
-			@Override
 			public T next() {
 
 				T value = nextNode.getValue();
 
-				nextNode = descending ? getPredecessor(nextNode) : getSuccessor(nextNode);
+				nextNode = descending ? findPredecessor(nextNode) : findSuccessor(nextNode);
 
 				return value;
+			}
+
+			public boolean hasNext() {
+
+				return nextNode != null;
 			}
 		};
 	}
 
+	@Override
 	public Iterator<T> iterator() {
 
-        return getIterator(false);
+		return getIterator(false);
 	}
 
 	public Iterator<T> descendingIterator() {
 
-        return getIterator(true);
-	}
-
-	public void breadthFirstTraversal() {
-
-		java.util.Queue<BinaryNode<T>> queue = new ArrayDeque<>();
-
-		if(root == null) {
-			return;
-		}
-
-		queue.add(root);
-
-		do {
-			BinaryNode<T> node = queue.remove();
-
-			System.out.println(node.getValue());
-
-			if(node.getLeft() != null) {
-				queue.add(node.getLeft());
-			}
-
-			if(node.getRight() != null) {
-				queue.add(node.getRight());
-			}
-		} while(!queue.isEmpty());
-	}
-
-	public void depthFirstTraversal() {
-
-		Deque<BinaryNode<T>> stack = new ArrayDeque<>();
-
-		if(root == null) {
-			return;
-		}
-
-		stack.push(root);
-
-		do {
-            BinaryNode<T> node = stack.pop();
-
-			System.out.println(node.getValue());
-
-			if(node.getRight() != null) {
-				stack.push(node.getRight());
-			}
-
-			if(node.getLeft() != null) {
-				stack.push(node.getLeft());
-			}
-
-		} while(!stack.isEmpty());
+		return getIterator(true);
 	}
 }
