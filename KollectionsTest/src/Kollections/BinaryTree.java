@@ -42,75 +42,40 @@ public class BinaryTree<T extends Comparable> implements Iterable<T> {
 
 		if (nodeToDelete == null) {
 			return false;
-		} else if (nodeToDelete.getLeftChild() == null && nodeToDelete.getRightChild() == null) {
-			if (nodeToDelete.getParent() == null) {
-				root = null;
-			} else if (nodeToDelete.getParent().getLeftChild() == nodeToDelete) {
-				nodeToDelete.getParent().setLeftChild(null);
-			} else {
-				nodeToDelete.getParent().setRightChild(null);
-			}
-		} else if (nodeToDelete.getLeftChild() == null || nodeToDelete.getRightChild() == null) {
-			BinaryNode<T> child = nodeToDelete.getLeftChild() != null ? nodeToDelete.getLeftChild() : nodeToDelete.getRightChild();
-
-			if (nodeToDelete.getParent() == null) {
-				root = child;
-				child.setParent(null);
-			} else if (nodeToDelete.getParent().getLeftChild() == nodeToDelete) {
-				nodeToDelete.getParent().setLeftChild(child);
-				child.setParent(nodeToDelete.getParent());
-			} else {
-				nodeToDelete.getParent().setRightChild(child);
-				child.setParent(nodeToDelete.getParent());
-			}
+		} if (nodeToDelete.getLeftChild() == null) {
+			transplant(nodeToDelete, nodeToDelete.getRightChild());
+		} else if (nodeToDelete.getRightChild() == null) {
+			transplant(nodeToDelete, nodeToDelete.getLeftChild());
 		} else {
-			BinaryNode<T> successor = findSuccessor(nodeToDelete);
+			BinaryNode<T> successor = findMinimum(nodeToDelete.getRightChild());
 
-			if(successor.getParent().getRightChild() == successor) {
-				successor.setLeftChild(nodeToDelete.getLeftChild());
-
-				if(nodeToDelete.getParent() == null) {
-                    root = successor;
-					successor.setParent(null);
-				} else if(nodeToDelete.getParent().getRightChild() == nodeToDelete) {
-					nodeToDelete.getParent().setRightChild(successor);
-					successor.setParent(nodeToDelete.getParent());
-				} else {
-					nodeToDelete.getParent().setLeftChild(successor);
-					successor.setParent(nodeToDelete.getParent());
-				}
-
-				successor.setLeftChild(nodeToDelete.getLeftChild());
-				successor.getLeftChild().setParent(successor);
-			} else {
-
-				if(successor.getRightChild() != null){
-					successor.getRightChild().setParent(successor.getParent());
-				}
-
-				successor.getParent().setLeftChild(successor.getRightChild());
-
-				if(nodeToDelete.getParent() == null) {
-					root = successor;
-					successor.setParent(null);
-				} else if(nodeToDelete.getParent().getRightChild() == nodeToDelete) {
-					nodeToDelete.getParent().setRightChild(successor);
-					successor.setParent(nodeToDelete.getParent());
-				} else {
-					nodeToDelete.getParent().setLeftChild(successor);
-					successor.setParent(nodeToDelete.getParent());
-				}
-
-				successor.setLeftChild(nodeToDelete.getLeftChild());
-				successor.getLeftChild().setParent(successor);
-
+            if(successor.getParent() != nodeToDelete) {
+				transplant(successor, successor.getRightChild());
 				successor.setRightChild(nodeToDelete.getRightChild());
 				successor.getRightChild().setParent(successor);
-
 			}
+
+			transplant(nodeToDelete, successor);
+			successor.setLeftChild(nodeToDelete.getLeftChild());
+			successor.getLeftChild().setParent(successor);
 		}
 
 		return true;
+	}
+
+	public void transplant(BinaryNode<T> destination, BinaryNode<T> source) {
+
+		if(destination.getParent() == null) {
+			root = source;
+		} else if(destination.getParent().getLeftChild() == destination) {
+			destination.getParent().setLeftChild(source);
+		} else {
+			destination.getParent().setRightChild(source);
+		}
+
+		if(source != null) {
+			source.setParent(destination.getParent());
+		}
 	}
 
 	public boolean isEmpty() {
