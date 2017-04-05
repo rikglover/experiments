@@ -1,20 +1,22 @@
-import Kollections.Trie;
+import Kollections.HuffmanCoder;
 
 public class KollectionsTest {
 
 	public static void main(String[] args) {
 
 		try {
-			Trie<Integer> trie = new Trie<>();
+			String inputString = "go go gophers";
 
-			trie.addValue("Rik", 46);
-			trie.addValue("Rikki", 50);
-			trie.addValue("Happy", 51);
+			HuffmanCoder coder = new HuffmanCoder(inputString);
 
-			System.out.println("Value of Rik =" + trie.getValue("Rik"));
-			System.out.println("Value of Rikki =" + trie.getValue("Rikki"));
-			System.out.println("Value of Happy =" + trie.getValue("Happy"));
-			System.out.println("Value of Donkey =" + trie.getValue("Donkey"));
+			String encodedMessage = coder.encodeMessage();
+
+			System.out.println("Encoded Message: " + encodedMessage);
+
+			String decodedMessage = coder.decodeMessage(encodedMessage);
+
+			System.out.println("Decoded Message: " + decodedMessage);
+
 		} catch(Exception ex) {
 			System.out.println("Unexpected error encountered: " + ex.getMessage());
 		}

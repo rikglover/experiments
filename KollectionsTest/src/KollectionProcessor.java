@@ -122,11 +122,11 @@ public class KollectionProcessor {
 		if (binaryTree.isEmpty()) {
 			System.out.println("\nThe binary tree is empty");
 		} else {
-			System.out.println();
+			System.out.print("[ ");
 
-			binaryTree.depthFirstTraversal();
+			binaryTree.forEach(x -> System.out.print(x + " "));
 
-			System.out.println();
+			System.out.println(" ]");
 		}
 	}
 
@@ -152,7 +152,7 @@ public class KollectionProcessor {
 		if (binaryTree.isEmpty()) {
 			System.out.println("\nThe binary tree is empty");
 		} else {
-			System.out.println("The minimum value of the binary tree is " + binaryTree.getMinimum());
+			System.out.println("The minimum value of the binary tree is " + binaryTree.findMinimum());
 		}
 	}
 
@@ -161,13 +161,13 @@ public class KollectionProcessor {
 		if (binaryTree.isEmpty()) {
 			System.out.println("\nThe binary tree is empty");
 		} else {
-			System.out.println("The maximum value of the binary tree is " + binaryTree.getMaximum());
+			System.out.println("The maximum value of the binary tree is " + binaryTree.findMaximum());
 		}
 	}
 
 	private void processDisplayHeight() {
 
-		System.out.println("\nThe binary tree contains " + binaryTree.getHeight() + " items");
+//		System.out.println("\nThe binary tree contains " + binaryTree.getHeight() + " items");
 	}
 
 	private void processContainsItem() {

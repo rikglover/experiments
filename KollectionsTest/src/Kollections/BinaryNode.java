@@ -3,25 +3,20 @@ package Kollections;
 public class BinaryNode<T> {
 
 	private T value;
-
-	private BinaryNode<T> left;
-	private BinaryNode<T> right;
+	private BinaryNode<T> leftChild;
+	private BinaryNode<T> rightChild;
 	private BinaryNode<T> parent;
-
-	public BinaryNode() {
-
-	}
 
 	public BinaryNode(T value) {
 
 		this.value = value;
 	}
 
-	public BinaryNode(T value, BinaryNode<T> left, BinaryNode<T> right) {
+	public BinaryNode(T value, BinaryNode<T> leftChild, BinaryNode<T> rightChild) {
 
 		this.value = value;
-		this.left = left;
-		this.right = right;
+		this.leftChild = leftChild;
+		this.rightChild = rightChild;
 	}
 
 	public T getValue() {
@@ -34,24 +29,24 @@ public class BinaryNode<T> {
 		this.value = value;
 	}
 
-	public BinaryNode<T> getLeft() {
+	public BinaryNode<T> getLeftChild() {
 
-		return left;
+		return leftChild;
 	}
 
-	public void setLeft(BinaryNode<T> left) {
+	public void setLeftChild(BinaryNode<T> leftChild) {
 
-		this.left = left;
+		this.leftChild = leftChild;
 	}
 
-	public BinaryNode<T> getRight() {
+	public BinaryNode<T> getRightChild() {
 
-		return right;
+		return rightChild;
 	}
 
-	public void setRight(BinaryNode<T> right) {
+	public void setRightChild(BinaryNode<T> rightChild) {
 
-		this.right = right;
+		this.rightChild = rightChild;
 	}
 
 	public BinaryNode<T> getParent() {
