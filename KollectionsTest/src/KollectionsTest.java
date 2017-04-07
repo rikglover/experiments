@@ -1,22 +1,11 @@
-import Kollections.HuffmanCoder;
-
 public class KollectionsTest {
 
 	public static void main(String[] args) {
 
 		try {
-			String inputString = "go go gophers";
+			KollectionProcessor processor = new KollectionProcessor();
 
-			HuffmanCoder coder = new HuffmanCoder(inputString);
-
-			String encodedMessage = coder.encodeMessage();
-
-			System.out.println("Encoded Message: " + encodedMessage);
-
-			String decodedMessage = coder.decodeMessage(encodedMessage);
-
-			System.out.println("Decoded Message: " + decodedMessage);
-
+			processor.processList();
 		} catch(Exception ex) {
 			System.out.println("Unexpected error encountered: " + ex.getMessage());
 		}

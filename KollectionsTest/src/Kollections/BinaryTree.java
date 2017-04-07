@@ -116,19 +116,13 @@ public class BinaryTree<T extends Comparable> implements Iterable<T> {
 	private void inorder(BinaryNode<T> rootOfSubtree) {
 
 		if (rootOfSubtree != null) {
-			if (rootOfSubtree.getLeftChild() != null) {
-				inorder(rootOfSubtree.getLeftChild());
-			}
-
+			inorder(rootOfSubtree.getLeftChild());
 			System.out.print(rootOfSubtree.getValue() + " ");
-
-			if (rootOfSubtree.getRightChild() != null) {
-				inorder(rootOfSubtree.getRightChild());
-			}
+			inorder(rootOfSubtree.getRightChild());
 		}
 	}
 
-	public void depthFirstTraversal() {
+	public void depthFirstTraversalPreorder() {
 
 		Deque<BinaryNode<T>> stack = new ArrayDeque<>();
 
@@ -276,6 +270,27 @@ public class BinaryTree<T extends Comparable> implements Iterable<T> {
 		}
 	}
 
+	public int computeHeight() {
+
+		if(root == null) {
+			return -1;
+		} else {
+			return computeHeight(root);
+		}
+	}
+
+	private int computeHeight(BinaryNode<T> subtreeRoot) {
+
+		if(subtreeRoot == null) {
+			return 0;
+		} else {
+			int leftHeight = computeHeight(subtreeRoot.getLeftChild()) + 1;
+			int rightHeight = computeHeight(subtreeRoot.getRightChild()) + 1;
+
+			return (leftHeight > rightHeight) ? leftHeight : rightHeight;
+		}
+	}
+
 	private Iterator<T> getIterator(boolean descending) {
 
 		return new Iterator<T>() {
@@ -307,5 +322,24 @@ public class BinaryTree<T extends Comparable> implements Iterable<T> {
 	public Iterator<T> descendingIterator() {
 
 		return getIterator(true);
+	}
+
+	@Override
+	public boolean equals(Object other) {
+
+		if(other != null && other instanceof BinaryTree) {
+			BinaryTree<T> otherTree = (BinaryTree<T>) other;
+
+			if(otherTree.root == this.root) {
+				return true;
+			} else if(otherTree.root == null || this.root == null) {
+                return false;
+			} else {
+				return otherTree.root.equals(this.root);
+			}
+
+		}
+
+		return false;
 	}
 }

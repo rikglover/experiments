@@ -124,7 +124,7 @@ public class KollectionProcessor {
 		} else {
 			System.out.print("[ ");
 
-			binaryTree.forEach(x -> System.out.print(x + " "));
+			binaryTree.inorder();
 
 			System.out.println(" ]");
 		}

@@ -58,4 +58,20 @@ public class BinaryNode<T> {
 
 		this.parent = parent;
 	}
+
+	@Override
+	public boolean equals(Object other) {
+
+		if(other != null && other instanceof BinaryNode) {
+			BinaryNode<T> otherNode = (BinaryNode<T>) other;
+
+			boolean leftChildrenEqual = this.leftChild == otherNode.leftChild || this.leftChild != null && this.leftChild.equals(otherNode.leftChild);
+			boolean rightChildrenEqual = this.rightChild == otherNode.rightChild || this.rightChild != null && this.rightChild.equals(otherNode.rightChild);
+			boolean valuesEqual = this.value == otherNode.value || this.value != null && this.value.equals(otherNode.value);
+
+			return valuesEqual && leftChildrenEqual && rightChildrenEqual;
+		}
+
+		return false;
+	}
 }
