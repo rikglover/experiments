@@ -36,6 +36,8 @@ public class SwaggerConfig {
 				.apiVersion("1.0")
 				.includePatterns("/polls/*.*", "/votes/*.*", "/computeresult/*.*");
 
+		swaggerSpringMvcPlugin.useDefaultResponseMessages(false);
+
 		return swaggerSpringMvcPlugin;
 	}
 }

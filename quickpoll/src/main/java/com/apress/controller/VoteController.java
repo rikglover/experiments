@@ -2,6 +2,7 @@ package com.apress.controller;
 
 import com.apress.domain.Vote;
 import com.apress.repository.VoteRepository;
+import com.wordnik.swagger.annotations.Api;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
 import java.net.URI;
 
 @RestController
+@Api(value = "votes", description = "Votes API")
 public class VoteController {
 
 	@Inject

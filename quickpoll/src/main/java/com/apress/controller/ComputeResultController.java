@@ -4,6 +4,7 @@ import com.apress.domain.Vote;
 import com.apress.dto.OptionCount;
 import com.apress.dto.VoteResult;
 import com.apress.repository.VoteRepository;
+import com.wordnik.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Api(value = "computeresult", description = "Compute Result API")
 public class ComputeResultController {
 
 	@Inject
