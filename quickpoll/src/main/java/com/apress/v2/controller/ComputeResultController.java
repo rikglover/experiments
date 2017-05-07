@@ -1,4 +1,4 @@
-package com.apress.controller;
+package com.apress.v2.controller;
 
 import com.apress.domain.Vote;
 import com.apress.dto.OptionCount;
@@ -16,7 +16,8 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@RestController("computerResultControllerV2")
+@RequestMapping("/v2/")
 @Api(value = "computeresult", description = "Compute Result API")
 public class ComputeResultController {
 

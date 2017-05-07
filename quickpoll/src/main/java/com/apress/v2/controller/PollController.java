@@ -1,4 +1,4 @@
-package com.apress.controller;
+package com.apress.v2.controller;
 
 import com.apress.domain.Poll;
 import com.apress.dto.error.ErrorDetail;
@@ -22,7 +22,8 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 
-@RestController
+@RestController("pollControllerV2")
+@RequestMapping("/v2/")
 @Api(value = "polls", description = "Poll API")
 public class PollController {
 

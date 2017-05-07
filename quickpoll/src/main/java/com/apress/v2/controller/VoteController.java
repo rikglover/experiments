@@ -1,4 +1,4 @@
-package com.apress.controller;
+package com.apress.v2.controller;
 
 import com.apress.domain.Vote;
 import com.apress.repository.VoteRepository;
@@ -16,7 +16,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.inject.Inject;
 import java.net.URI;
 
-@RestController
+@RestController("voteControllerV2")
+@RequestMapping("/v2/")
 @Api(value = "votes", description = "Votes API")
 public class VoteController {
 
