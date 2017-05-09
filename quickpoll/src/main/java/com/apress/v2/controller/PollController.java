@@ -8,6 +8,8 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +34,10 @@ public class PollController {
 
 	@RequestMapping(value = "/polls", method = RequestMethod.GET)
 	@ApiOperation(value = "Retrieves all the polls", response = Poll.class, responseContainer = "List")
-	public ResponseEntity<Iterable<Poll>> getAllPolls() {
+	public ResponseEntity<Page<Poll>> getAllPolls(Pageable pageable) {
 
-		Iterable<Poll> allPolls = pollRepository.findAll();
-		ResponseEntity<Iterable<Poll>> responseEntity = new ResponseEntity<>(pollRepository.findAll(), HttpStatus.OK);
+		Page<Poll> allPolls = pollRepository.findAll(pageable);
+		ResponseEntity<Page<Poll>> responseEntity = new ResponseEntity<>(allPolls, HttpStatus.OK);
 
 		return responseEntity;
 	}
