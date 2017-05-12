@@ -24,3 +24,4 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
 				.authorizeRequests().antMatchers("/oauth2/v3/polls/**").authenticated();
 	}
 }
+
