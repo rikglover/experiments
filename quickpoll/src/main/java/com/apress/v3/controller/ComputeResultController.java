@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController("computerResultControllerV3")
-@RequestMapping("/v3/")
+@RequestMapping({"/v3/", "/oauth2/v3/"})
 @Api(value = "computeresult", description = "Compute Result API")
 public class ComputeResultController {
 
