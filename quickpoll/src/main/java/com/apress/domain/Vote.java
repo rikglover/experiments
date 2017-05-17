@@ -19,6 +19,9 @@ public class Vote {
 	@JoinColumn(name = "OPTION_ID")
 	private Option option;
 
+	public Vote() {
+	}
+
 	public Long getId() {
 
 		return id;
@@ -37,5 +40,11 @@ public class Vote {
 	public void setOption(Option option) {
 
 		this.option = option;
+	}
+
+	@Override
+	public String toString() {
+
+		return getId() + ", " + getOption();
 	}
 }

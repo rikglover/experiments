@@ -31,6 +31,15 @@ public class Poll {
 	@Size(min = 2, max = 6)
 	private Set<Option> options;
 
+	public Poll() {
+	}
+
+	public Poll(String question, Set<Option> options) {
+
+		this.question = question;
+		this.options = options;
+	}
+
 	public Long getId() {
 
 		return id;
@@ -59,5 +68,11 @@ public class Poll {
 	public void setOptions(Set<Option> options) {
 
 		this.options = options;
+	}
+
+	@Override
+	public String toString() {
+
+		return getId() + ", " + getQuestion() + ", " + getOptions();
 	}
 }

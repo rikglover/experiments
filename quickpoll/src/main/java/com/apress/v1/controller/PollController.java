@@ -44,7 +44,7 @@ public class PollController {
 	@ApiOperation(value = "Creates a new Poll", notes = "The newly created poll Id will be sent in the location response header", response = Void.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Poll Created Successfully", response = Void.class),
 			@ApiResponse(code = 500, message = "Error creating Poll", response = ErrorDetail.class) })
-	public ResponseEntity<Void> createPoll(@Valid @RequestBody Poll poll) {
+	public ResponseEntity<Poll> createPoll(@Valid @RequestBody Poll poll) {
 
 		poll = pollRepository.save(poll);
 
@@ -59,7 +59,7 @@ public class PollController {
 
 		responseHeaders.setLocation(newPollUri);
 
-		return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<>(poll, responseHeaders, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/polls/{pollId}", method = RequestMethod.GET)

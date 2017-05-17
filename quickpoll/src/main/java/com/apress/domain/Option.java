@@ -16,6 +16,14 @@ public class Option {
 	@Column(name = "OPTION_VALUE")
 	private String value;
 
+	public Option() {
+	}
+
+	public Option(String value) {
+
+		setValue(value);
+	}
+
 	public Long getId() {
 
 		return id;
@@ -34,5 +42,11 @@ public class Option {
 	public void setValue(String value) {
 
 		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+
+		return getId() + "," + getValue();
 	}
 }

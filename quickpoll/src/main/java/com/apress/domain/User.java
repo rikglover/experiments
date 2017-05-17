@@ -41,6 +41,9 @@ public class User {
 	@NotEmpty
 	private boolean admin;
 
+	public User() {
+	}
+
 	public Long getId() {
 
 		return id;
