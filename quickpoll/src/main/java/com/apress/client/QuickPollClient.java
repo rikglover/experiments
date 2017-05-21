@@ -146,11 +146,11 @@ public class QuickPollClient {
 
         client.updatePoll(newPoll2);
 
-        Poll newPoll3 = client.getPollByIdWithOauth(newPoll2.getId());
+        Poll newPoll3 = client.getPollByIdWithOauth(newPoll2.getPollId());
 
         System.out.println("new new new poll: " + newPoll3);
 
-        client.deletePollV3(newPoll3.getId());
+        client.deletePollV3(newPoll3.getPollId());
 
         PageWrapper<Poll> pollWrapper1 = client.getAllPolls(0, 4);
 

@@ -1,6 +1,7 @@
 package com.apress.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.hateoas.ResourceSupport;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +15,7 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
-public class Poll {
+public class Poll extends ResourceSupport {
 
 	@Id
 	@GeneratedValue
@@ -40,12 +41,12 @@ public class Poll {
 		this.options = options;
 	}
 
-	public Long getId() {
+	public Long getPollId() {
 
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setPollId(Long id) {
 
 		this.id = id;
 	}

@@ -35,7 +35,7 @@ public class PollController {
 	public ResponseEntity<Iterable<Poll>> getAllPolls() {
 
 		Iterable<Poll> allPolls = pollRepository.findAll();
-		ResponseEntity<Iterable<Poll>> responseEntity = new ResponseEntity<>(pollRepository.findAll(), HttpStatus.OK);
+		ResponseEntity<Iterable<Poll>> responseEntity = new ResponseEntity<>(allPolls, HttpStatus.OK);
 
 		return responseEntity;
 	}
