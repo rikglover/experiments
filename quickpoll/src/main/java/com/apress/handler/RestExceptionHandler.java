@@ -27,7 +27,7 @@ import java.util.List;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Inject
-	MessageSource messageSource;
+	private MessageSource messageSource;
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
